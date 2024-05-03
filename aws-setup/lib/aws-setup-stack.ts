@@ -7,6 +7,7 @@ export class AwsSetupStack extends cdk.Stack {
     super(scope, id, props);
 
     new cdk.aws_codebuild.Project(this, "Github", {
+      projectName: "github-runner",
       source: cdk.aws_codebuild.Source.gitHub({
         owner: "RaphaelManke",
         repo: "codebuild-github-example",
