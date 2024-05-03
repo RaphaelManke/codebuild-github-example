@@ -9,11 +9,12 @@ jobs:
   # This is a job with a job ID called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: codebuild-github-runner-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: codebuild-github-runner-lambda-${{ github.run_id }}-${{ github.run_attempt }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - run: echo "::add-mask::$CUSTOM_SECRET"
       - run: printenv
       - uses: actions/checkout@v3
 

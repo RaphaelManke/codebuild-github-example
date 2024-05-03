@@ -33,5 +33,31 @@ export class AwsSetupStack extends cdk.Stack {
         },
       },
     });
+
+    new cdk.aws_codebuild.Project(this, "GithubLambda", {
+      projectName: "github-runner-lambda",
+      source: cdk.aws_codebuild.Source.gitHub({
+        owner: "RaphaelManke",
+        repo: "codebuild-github-example",
+        webhook: true,
+        webhookFilters: [
+          cdk.aws_codebuild.FilterGroup.inEventOf(
+            // @ts-ignore
+            "WORKFLOW_JOB_QUEUED"
+          ),
+        ],
+      }),
+      environment: {
+        computeType: cdk.aws_codebuild.ComputeType.LAMBDA_10GB,
+        buildImage:
+          cdk.aws_codebuild.LinuxArmLambdaBuildImage.AMAZON_LINUX_2023_NODE_20,
+      },
+      environmentVariables: {
+        CUSTOM_SECRET: {
+          type: cdk.aws_codebuild.BuildEnvironmentVariableType.SECRETS_MANAGER,
+          value: "some-secret-value",
+        },
+      },
+    });
   }
 }
